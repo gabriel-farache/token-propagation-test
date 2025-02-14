@@ -1,0 +1,3 @@
+org/kie/kogito/openapi/test/api/DefaultApi.java
+org/kie/kogito/openapi/test/api/auth/AuthenticationPropagationHeadersFactory.java
+org/kie/kogito/openapi/test/api/auth/CompositeAuthenticationProvider.java

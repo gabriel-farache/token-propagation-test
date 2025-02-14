@@ -1,0 +1,47 @@
+id: basic
+version: "1.0"
+specVersion: "0.8"
+name: "basic"
+description: Print input value
+dataInputSchema: schemas/basic__main-schema.json
+extensions:
+  - extensionid: workflow-output-schema
+    outputSchema: schemas/workflow-output-schema.json
+  - extensionid: workflow-uri-definitions
+    definitions:
+      notifications: "https://raw.githubusercontent.com/rhdhorchestrator/serverless-workflows/main/workflows/shared/specs/notifications-openapi.yaml"
+functions:
+  - name: createNotification
+    operation: notifications#createNotification
+  - name: test
+    operation: specs/test.yaml#test
+  - name: print
+    type: custom
+    operation: sysout
+  - name: successResult
+    type: expression
+    operation: '{
+        "result": {
+          "completedWith":"success",
+          "message": "Project " + .projectName + " active",
+          "outputs":[]
+        }
+      }'
+start: "Print inputs"
+states:
+  - name: Print inputs
+    type: operation
+    actions:
+      - name: "test"
+        functionRef:
+          refName: test
+          #arguments:
+          #  api-key: "securityHeaderFTW"
+      - functionRef:
+          refName: print
+          arguments:
+            message: '"Project " + .projectName'
+      - name: setOutput
+        functionRef:
+          refName: successResult
+    end: true
